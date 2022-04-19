@@ -2,7 +2,7 @@ import BaseService from "./base.service";
 
 class FoodServices extends BaseService {
   async getAllMenu() {
-    return this.axios.get();
+    return this.axios.get("/meals.json");
   }
 }
 

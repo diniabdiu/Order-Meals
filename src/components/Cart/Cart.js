@@ -8,6 +8,9 @@ import Modal from "../UI/Modal";
 import CartItem from "./CartItem";
 import Checkout from "./Checkout";
 
+// Services
+import { orderServices } from "../../services/orders.service";
+
 // Style
 import classes from "./Cart.module.css";
 
@@ -28,6 +31,14 @@ const Cart = (props) => {
 
   const orderHandler = () => {
     setIsCheckout(true);
+  };
+
+  const submitOrderHandler = (userData) => {
+    const req = orderServices.orderFood({
+      user: userData,
+      orderedItems: cartCtx.items,
+    });
+    console.log(req);
   };
 
   const cartItems = (
@@ -65,7 +76,9 @@ const Cart = (props) => {
         <span>Total Amount</span>
         <span>{totalAmount}</span>
       </div>
-      {isCheckout && <Checkout onCancel={props.onClose} />}
+      {isCheckout && (
+        <Checkout onConfirm={submitOrderHandler} onCancel={props.onClose} />
+      )}
       {!isCheckout && modalActions}
     </Modal>
   );
