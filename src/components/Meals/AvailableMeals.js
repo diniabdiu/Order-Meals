@@ -1,44 +1,64 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useState, useEffect } from "react";
 import Card from "../UI/Card";
-// import MealItem from "./MealItem/MealItem";
+import MealItem from "./MealItem/MealItem";
 import classes from "./AvailableMeals.module.css";
 import { foodServices } from "../../services/food.service";
 const AvailableMeals = () => {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
 
-  useEffect(() => {
+  const getDatas = async () => {
     setLoading(true);
-    const getMenu = async () => {
-      try {
-        const res = foodServices.getAllMenu();
-        setLoading(false);
-        const orders = await res.json();
-        setOrders(orders);
-        console.log(orders);
-      } catch (error) {
-        setLoading(false);
-        const err = error;
-        console.log(err);
+    try {
+      const res = await foodServices.getAllMenu();
+      const c = res.data;
+
+      // Transform object into Array
+      let loadedMeals = [];
+      for (const key in c) {
+        loadedMeals.push({
+          id: key,
+          name: c[key].name,
+          description: c[key].description,
+          price: c[key].price,
+        });
       }
-    };
-    getMenu();
+      setOrders(loadedMeals);
+
+      // setOrders([c]);
+      // console.log("HERE ARE THE DATA ON ARRAY => ", orders);
+    } catch (error) {
+      const err = error;
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+  useEffect(() => {
+    getDatas();
+    console.log("i am here");
   }, []);
 
-  console.log(orders);
-  // const mealsList = DUMMY_MEALS.map((meal, index) => (
-  //   <MealItem
-  //     id={meal.id}
-  //     key={meal.id}
-  //     name={meal.name}
-  //     description={meal.description}
-  //     price={meal.price}
-  //   />
-  // ));
+  const mealsList = orders.map((meal, i) => (
+    <MealItem
+      id={meal}
+      key={i}
+      name={meal.name}
+      description={meal.description}
+      price={meal.price}
+    />
+  ));
+  console.log("mealsList", mealsList);
 
   return (
     <section className={classes.meals}>
-      <Card>{/* <ul>{mealsList}</ul> */}</Card>
+      <Card>
+        <ul>{mealsList}</ul>
+      </Card>
+      {loading && <p>Loading...</p>}
+      {!!error && <p>{error}</p>}
     </section>
   );
 };

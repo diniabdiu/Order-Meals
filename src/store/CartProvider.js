@@ -63,7 +63,6 @@ const CartProvider = (props) => {
     cartReducer,
     defaultCartState
   );
-  console.log(cartState, "her");
   const addItemToCartHandler = (item) => {
     dispatchCartAction({ type: "ADD", item: item });
   };
@@ -77,7 +76,6 @@ const CartProvider = (props) => {
     addItem: addItemToCartHandler,
     removeItem: removeItemFromCartHandler,
   };
-  console.log(cartContext, "jher");
   return (
     <CartContext.Provider value={cartContext}>
       {props.children}

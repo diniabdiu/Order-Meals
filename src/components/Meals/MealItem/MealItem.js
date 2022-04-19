@@ -11,7 +11,7 @@ import { useContext } from "react";
 const MealItem = (props) => {
   const cartCtx = useContext(CartContext);
 
-  const price = `$${props.price.toFixed(2)}`;
+  const price = `$${props.price}`;
 
   const addToCartHandler = (amount) => {
     cartCtx.addItem({
