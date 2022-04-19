@@ -1,10 +1,16 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useState, useEffect } from "react";
+
+// Import services
+import { foodServices } from "../../services/food.service";
+
+// Import Component
 import Card from "../UI/Card";
 import MealItem from "./MealItem/MealItem";
 import classes from "./AvailableMeals.module.css";
-import { foodServices } from "../../services/food.service";
+
 const AvailableMeals = () => {
+  // States
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -15,7 +21,7 @@ const AvailableMeals = () => {
       const res = await foodServices.getAllMenu();
       const c = res.data;
 
-      // Transform object into Array
+      // Transform object named C into Array
       let loadedMeals = [];
       for (const key in c) {
         loadedMeals.push({
@@ -26,9 +32,6 @@ const AvailableMeals = () => {
         });
       }
       setOrders(loadedMeals);
-
-      // setOrders([c]);
-      // console.log("HERE ARE THE DATA ON ARRAY => ", orders);
     } catch (error) {
       const err = error;
       setError(err.message);
@@ -38,9 +41,7 @@ const AvailableMeals = () => {
   };
   useEffect(() => {
     getDatas();
-    console.log("i am here");
   }, []);
-
   const mealsList = orders.map((meal, i) => (
     <MealItem
       id={meal}
